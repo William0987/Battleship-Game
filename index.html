@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com"       
+    crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Lobster&family=Londrina+Shadow&family=Pangolin&family=Source+Code+Pro:wght@200&display=swap" rel="stylesheet">
+    <title>Battleship-Game</title>
+</head>
+<body>
+    <h1>Battleship</h1>
+    <h2 class="turnIndicator" id="turnIndicator">Game hasn't started yet...</h2>
+    <h3 class="placeShipsWarn">Please place your ships to start the game...</h3>
+    <h3 class="boardName" id="playerBoardName">Player Board</h3>
+    <h3 class="boardName" id="aiBoardName">AI Board</h3>
+    <div class="boardContainer">
+        <div class="board" id="playerBoard"></div>
+        <div class="board" id="aiBoard"></div>
+    </div>
+
+    <div class="shipContainer" id="shipContainer">
+        <div class="shipUsed" id="ship1" ship-size="2" draggable="true"></div>
+        <div class="shipUsed" id="ship2" ship-size="3" draggable="true"></div>
+        <div class="shipUsed" id="ship3" ship-size="4" draggable="true"></div>
+        <div class="shipUsed" id="ship4" ship-size="5" draggable="true"></div>
+        <button class="rotateBtn" id="rotateBtn">Rotate</button>
+    </div>
+
+    <button class="startBtn" id="startBtn">Start</button>
+    <button class="restartBtn" id="restartBtn">Restart</button>
+
+    <script src="main.js"></script>
+</body>
+</html>
