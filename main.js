@@ -5,7 +5,6 @@ function boardBuilder(boardName) {
     for (let j = 0; j < 10; j++) {
       const square = document.createElement('div');
       square.className = 'square';
-      square.addEventListener('click', () => playerClickSquare(square, boardName));
       board.appendChild(square);
     }
   }
@@ -15,8 +14,10 @@ function boardBuilder(boardName) {
 
 const playerBoard = boardBuilder('playerBoard');
 const aiBoard = boardBuilder('aiBoard');
+const shipContainer = document.getElementById("shipContainer");
 const shipsUsed = document.querySelectorAll('.shipUsed');
 const squares = playerBoard.getElementsByClassName('square');
+const aiSquares = aiBoard.getElementsByClassName('square');
 let shipToDrag = null;
 
 for (const ships of shipsUsed) {
@@ -85,8 +86,6 @@ function addAIShips(board, amountOfShips) {
   }
 }
 
-addAIShips(aiBoard, 4);
-
 function playerClickSquare(square, board) {
   if (board === 'aiBoard') {
     if (square.classList.contains('isShip')) {
@@ -100,6 +99,42 @@ function playerClickSquare(square, board) {
   }
 }
 
-function activateAI(){
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
+const rotateBtn = document.getElementById("rotateBtn");
+const turnIndicator = document.getElementById("turnIndicator");
+const warningIndicator = document.getElementById("placeShipsWarn");
+const shipContainerEl = shipContainer.getElementsByClassName("shipUsed");
 
+startBtn.addEventListener("click", startButton);
+restartBtn.addEventListener("click", restartButton);
+rotateBtn.addEventListener("click", rotateButton);
+
+function startButton(){
+  for(let i = 0; i<aiSquares.length; i++){
+    if(aiSquares[i].classList.contains("isShip")){
+      turnIndicator.innerText = "You have already started the game.";
+      return;
+    }
+  }
+  for(let i = 0; i<shipContainerEl.length; i++){
+    if(shipContainerEl[i].classList.contains("shipUsed")){
+      warningIndicator.innerText = "Error. All ships need to be placed first before you can start the game."
+      return;
+    }
+  }
+
+  addAIShips(aiBoard, 4);
+  
+  for(const square of aiSquares){
+    square.addEventListener('click', () => playerClickSquare(square, 'aiBoard'));
+  }
+}
+
+function restartButton(){
+  location.reload();
+}
+
+function rotateButton(){
+  
 }
