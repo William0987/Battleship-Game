@@ -129,20 +129,38 @@ function addAIShips(board, amountOfShips) {
 }
 
 function playerClickSquare(square, board) {
-  if (board === 'aiBoard') {
+  if (board === 'aiBoard' && (warningIndicator.innerText === "You have started the game. Click on any square on your opponent's board that you would like to attack first." || warningIndicator.innerText === "Opponent has missed. It is your turn now." || warningIndicator.innerText === "You hit a ship. You can attack again.")) {
     if (square.classList.contains('isShip')) {
       square.style.backgroundColor = 'red';
       square.removeEventListener('click', playerClickSquare);
+      warningIndicator.innerText = "You hit a ship. You can attack again."
     } else {
       square.style.backgroundColor = 'orange';
       square.removeEventListener('click', playerClickSquare);
-      activateAI();
+      warningIndicator.innerText = "You missed. It is your opponent's turn to attack. Please wait..."
+      turnIndicator.innerText = "Game has started."
+      setTimeout(activateAI, 1000);
     }
   }
 }
 
 function activateAI(){
-
+  if(warningIndicator.innerText === "You missed. It is your opponent's turn to attack. Please wait..." || warningIndicator.innerText === "Opponent has hit your ship. It will attack again."){
+    const randomSquare = randomSquarePos(playerBoard);
+    if(randomSquare.classList.contains("isShip")){
+      randomSquare.classList.remove("isShip");
+      randomSquare.classList.add("hit");
+      randomSquare.style.backgroundColor = "red";
+      warningIndicator.innerText = "Opponent has hit your ship. It will attack again."
+      setTimeout(activateAI, 1000);
+    } else if (randomSquare.classList.contains("hit") || randomSquare.classList.contains("miss")){
+      activateAI();
+    } else if (randomSquare.classList.contains("square")){
+      randomSquare.classList.add("miss");
+      randomSquare.style.backgroundColor = "orange";
+      warningIndicator.innerText = "Opponent has missed. It is your turn now."
+    }
+  }
 }
 
 const startBtn = document.getElementById("startBtn");
