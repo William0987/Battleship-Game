@@ -19,6 +19,8 @@ const shipsUsed = document.querySelectorAll('.shipUsed');
 const squares = playerBoard.getElementsByClassName('square');
 const aiSquares = aiBoard.getElementsByClassName('square');
 let shipToDrag = null;
+let horizontalOrientation = true;
+let verticalOrientation = false;
 
 for (const ships of shipsUsed) {
   ships.addEventListener('dragstart', dragStart);
@@ -52,14 +54,54 @@ function dragDrop(evt) {
   evt.preventDefault();
   evt.target.classList.remove('dragHover');
 
-  if (evt.target.parentElement.id === 'playerBoard' && !evt.target.classList.contains('isShip')) {
+  if (evt.target.parentElement.id === 'playerBoard' && verticalOrientation === true && !evt.target.classList.contains("isShip")){
+    const shipSize = parseInt(shipToDrag.getAttribute('ship-size'));
+    const dropStartPos = Array.from(squares).indexOf(evt.target);
+    const dropEndPos = dropStartPos + (shipSize*10);
+    let classIsShip = false;
+
+    if (dropEndPos <= squares.length) {
+      for (let i = dropStartPos; i < dropEndPos; i+=10) {
+        if(squares[i].classList.contains('isShip')){
+          classIsShip = true;
+          break;
+        }
+      }
+      
+      if(!classIsShip){  
+        for(let i = dropStartPos; i < dropEndPos; i+=10){
+          squares[i].classList.add('isShip');
+        }
+      } else{
+        return;
+      }
+
+      shipToDrag.draggable = false;
+      shipToDrag.removeEventListener('dragstart', dragStart);
+      shipToDrag.parentNode.removeChild(shipToDrag);
+    }
+  }
+
+  if (evt.target.parentElement.id === 'playerBoard' && horizontalOrientation === true && !evt.target.classList.contains("isShip")){
     const shipSize = parseInt(shipToDrag.getAttribute('ship-size'));
     const dropStartPos = Array.from(squares).indexOf(evt.target);
     const dropEndPos = dropStartPos + shipSize;
+    let classIsShip = false;
 
     if (dropEndPos <= squares.length) {
       for (let i = dropStartPos; i < dropEndPos; i++) {
-        squares[i].classList.add('isShip');
+        if(squares[i].classList.contains('isShip')){
+          classIsShip = true;
+          break;
+        }
+      }
+      
+      if(!classIsShip){  
+        for(let i = dropStartPos; i < dropEndPos; i++){
+          squares[i].classList.add('isShip');
+        }
+      } else{
+        return;
       }
 
       shipToDrag.draggable = false;
@@ -99,12 +141,20 @@ function playerClickSquare(square, board) {
   }
 }
 
+function activateAI(){
+
+}
+
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
 const rotateBtn = document.getElementById("rotateBtn");
 const turnIndicator = document.getElementById("turnIndicator");
 const warningIndicator = document.getElementById("placeShipsWarn");
 const shipContainerEl = shipContainer.getElementsByClassName("shipUsed");
+const ship1 = document.getElementById("ship1");
+const ship2 = document.getElementById("ship2");
+const ship3 = document.getElementById("ship3");
+const ship4 = document.getElementById("ship4");
 
 startBtn.addEventListener("click", startButton);
 restartBtn.addEventListener("click", restartButton);
@@ -125,16 +175,35 @@ function startButton(){
   }
 
   addAIShips(aiBoard, 4);
-  
+  warningIndicator.innerText = "You have started the game. Click on any square on your opponent's board that you would like to attack first."
+  turnIndicator.innerText = "You have the first turn to attack your opponent's ships."
+
   for(const square of aiSquares){
     square.addEventListener('click', () => playerClickSquare(square, 'aiBoard'));
   }
+  rotateBtn.style.display = 'none';
+  shipContainer.style.display = 'none';
 }
 
 function restartButton(){
   location.reload();
 }
 
+let angleOfShip = 0;
+
 function rotateButton(){
-  
+  angleOfShip += 90;
+  for(const ship of shipsUsed){
+    ship.style.transform = `rotate(${angleOfShip}deg)`
+  }
+  if(horizontalOrientation){
+    horizontalOrientation = false;
+    verticalOrientation = true;
+  } else{
+    horizontalOrientation = true;
+    verticalOrientation = false;
+  }
 }
+
+
+
