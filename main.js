@@ -81,7 +81,7 @@ function dragDrop(evt) {
             squares[i].style.backgroundColor = "darkgoldenrod";
           }
           if(shipSize === 2){
-            squares[i].style.backgroundColor = "crimson";
+            squares[i].style.backgroundColor = "brown";
           }
         }
       } else{
@@ -123,7 +123,7 @@ function dragDrop(evt) {
             squares[i].style.backgroundColor = "darkgoldenrod";
           }
           if(shipSize === 2){
-            squares[i].style.backgroundColor = "crimson";
+            squares[i].style.backgroundColor = "brown";
           }
         }
       } else{
@@ -145,12 +145,72 @@ function randomSquarePos(board) {
 
 function addAIShips(board, amountOfShips) {
   for (let i = 0; i < amountOfShips; i++) {
-    let square;
-    do {
-      square = randomSquarePos(board);
-    } while (square.classList.contains('isShip'));
+    let randomNum = Math.random() < 0.5;
+    let horizontalOrientation = randomNum;
+    if(horizontalOrientation){
+      let randomPos = randomSquarePos(board);
+      let startPos = Array.from(aiSquares).indexOf(randomPos);
+      let endPos = startPos + (i+2);
+      let startPosArr = startPos.toString().split('').map(Number);
+      let endPosArr = endPos.toString().split('').map(Number);
+      let classIsShip = false;
+      for (let m = startPos; m < endPos; m++) {
+        if(aiSquares[m].classList.contains('isShip')){
+          classIsShip = true;
+        }
+      }
+      while(classIsShip === true){
+        while(endPos > aiSquares.length && ((startPosArr[0] != endPosArr[0]) || (endPosArr[1] != 0))){
+          randomPos = randomSquarePos(board);
+          startPos = Array.from(aiSquares).indexOf(randomPos);
+          endPos = startPos + (i+2);
+          startPosArr = startPos.toString().split('').map(Number);
+          endPosArr = endPos.toString().split('').map(Number);
+          for (let m = startPos; m < endPos; m++) {
+            if(aiSquares[m].classList.contains('isShip')){
+            classIsShip = true;
+            }
+          }
+        };
+      }
 
-    square.classList.add('isShip');
+      for(let k = startPos; k < endPos; k++){
+        aiSquares[k].classList.add('isShip');
+        aiSquares[k].style.backgroundColor = "white";
+        aiSquares[k].style.border = "1px solid lightgrey"
+      }
+    }
+    if(!horizontalOrientation){
+      let randomPos = randomSquarePos(board);
+      let startPos = Array.from(aiSquares).indexOf(randomPos);
+      let endPos = startPos + ((i+1)*10);
+      let startPosArr = startPos.toString().split('').map(Number);
+      let endPosArr = endPos.toString().split('').map(Number);
+      let classIsShip = false;
+      for (let m = startPos; m <= endPos; m+=10) {
+        if(aiSquares[m].classList.contains('isShip')){
+          classIsShip = true;
+        }
+      }
+      while(classIsShip === true && endPos > aiSquares.length){
+        randomPos = randomSquarePos(board);
+        startPos = Array.from(aiSquares).indexOf(randomPos);
+        endPos = startPos + (i+2);
+        startPosArr = startPos.toString().split('').map(Number);
+        endPosArr = endPos.toString().split('').map(Number);
+        for (let m = startPos; m < endPos; m+=10) {
+          if(aiSquares[m].classList.contains('isShip')){
+          classIsShip = true;
+          }
+        };
+      }
+
+      for(let k = startPos; k <= endPos; k+=10){
+        aiSquares[k].classList.add('isShip');
+        aiSquares[k].style.backgroundColor = "white";
+        aiSquares[k].style.border = "1px solid lightgrey"
+      }
+    }
   }
 }
 

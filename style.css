@@ -88,14 +88,13 @@ h1{
 #ship1 {
   width: 60px;
   height: 30px;
-  background-color: crimson;
+  background-color: brown;
 }
 
 #ship2 {
   width: 90px;
   height: 30px;
   background-color: darkgoldenrod;
-
 }
 
 #ship3 {
@@ -176,9 +175,9 @@ button:hover{
 
 .hit{
   font-size: 30px;
-  color: orange;
+  color: red;
   background-color: blue;
-  font-weight: 500;
+  font-weight: 1000;
   font-family: 'Londrina Shadow', cursive;
   text-align: center;
   justify-content: center;
