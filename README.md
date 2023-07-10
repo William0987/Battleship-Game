@@ -26,5 +26,6 @@ https://william0987.github.io/Battleship-Game/
 - Indicate when a ship is sunk
 - Fix AI Ships ocassional problem in which when it generates, it can go through the border onto the next row
 - When ships rotate, the shipping container must adapt its width and height towards the new sizes of the ship
+- Make the AI smarter (For Example: if it hits a ship, its next target to hit will be one of the squares surrounding the ship. If it subsequently misses, it will hit another square among those previous surrounding squares, and so on until it hits a square, and repeates the process. It should also identify if a ship is horizontal or vertical, and take that into account when making its next move)
 
 

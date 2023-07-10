@@ -102,7 +102,7 @@ function dragDrop(evt) {
     const startPosArr = dropStartPos.toString().split('').map(Number);
     const endPosArr = dropEndPos.toString().split('').map(Number);
 
-    if (dropEndPos <= squares.length && (startPosArr[0] === endPosArr[0] || endPosArr[1] === 0)) {
+    if (dropEndPos <= squares.length && ((startPosArr[0] === endPosArr[0] && startPosArr[1] !== endPosArr[1])|| endPosArr[1] === 0 || startPosArr.length === 1)) {
       for (let i = dropStartPos; i < dropEndPos; i++) {
         if(squares[i].classList.contains('isShip')){
           classIsShip = true;
@@ -145,8 +145,8 @@ function randomSquarePos(board) {
 
 function addAIShips(board, amountOfShips) {
   for (let i = 0; i < amountOfShips; i++) {
-    let randomNum = Math.random() < 0.5;
-    let horizontalOrientation = randomNum;
+    let randomChoice = Math.random() < 0.5;
+    let horizontalOrientation = randomChoice;
     if(horizontalOrientation){
       let randomPos = randomSquarePos(board);
       let startPos = Array.from(aiSquares).indexOf(randomPos);
@@ -296,6 +296,9 @@ function startButton(){
   }
   rotateBtn.style.display = 'none';
   shipContainer.style.display = 'none';
+  if(warningIndicator.innerText === "You hit a ship. You can attack again." || warningIndicator.innerText === "Opponent has missed. It is your turn now." || warningIndicator.innerText === "You missed. It is your opponent's turn to attack. Please wait..." || warningIndicator.innerText === "Opponent has hit your ship. It will attack again."){
+    startBtn.removeEventListener("click", startButton);
+  }
 }
 
 function restartButton(){
