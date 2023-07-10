@@ -57,11 +57,11 @@ function dragDrop(evt) {
   if (evt.target.parentElement.id === 'playerBoard' && verticalOrientation === true && !evt.target.classList.contains("isShip")){
     const shipSize = parseInt(shipToDrag.getAttribute('ship-size'));
     const dropStartPos = Array.from(squares).indexOf(evt.target);
-    const dropEndPos = dropStartPos + (shipSize*10);
+    const dropEndPos = dropStartPos + (shipSize*10-10);
     let classIsShip = false;
 
-    if (dropEndPos <= squares.length) {
-      for (let i = dropStartPos; i < dropEndPos; i+=10) {
+    if (dropEndPos <= squares.length){
+      for (let i = dropStartPos; i <= dropEndPos; i+=10) {
         if(squares[i].classList.contains('isShip')){
           classIsShip = true;
           break;
@@ -69,8 +69,20 @@ function dragDrop(evt) {
       }
       
       if(!classIsShip){  
-        for(let i = dropStartPos; i < dropEndPos; i+=10){
+        for(let i = dropStartPos; i <= dropEndPos; i+=10){
           squares[i].classList.add('isShip');
+          if(shipSize === 5){
+            squares[i].style.backgroundColor = "coral";
+          }
+          if(shipSize === 4){
+            squares[i].style.backgroundColor = "indigo";
+          }
+          if(shipSize === 3){
+            squares[i].style.backgroundColor = "darkgoldenrod";
+          }
+          if(shipSize === 2){
+            squares[i].style.backgroundColor = "crimson";
+          }
         }
       } else{
         return;
@@ -87,8 +99,10 @@ function dragDrop(evt) {
     const dropStartPos = Array.from(squares).indexOf(evt.target);
     const dropEndPos = dropStartPos + shipSize;
     let classIsShip = false;
+    const startPosArr = dropStartPos.toString().split('').map(Number);
+    const endPosArr = dropEndPos.toString().split('').map(Number);
 
-    if (dropEndPos <= squares.length) {
+    if (dropEndPos <= squares.length && (startPosArr[0] === endPosArr[0] || endPosArr[1] === 0)) {
       for (let i = dropStartPos; i < dropEndPos; i++) {
         if(squares[i].classList.contains('isShip')){
           classIsShip = true;
@@ -99,6 +113,18 @@ function dragDrop(evt) {
       if(!classIsShip){  
         for(let i = dropStartPos; i < dropEndPos; i++){
           squares[i].classList.add('isShip');
+          if(shipSize === 5){
+            squares[i].style.backgroundColor = "coral";
+          }
+          if(shipSize === 4){
+            squares[i].style.backgroundColor = "indigo";
+          }
+          if(shipSize === 3){
+            squares[i].style.backgroundColor = "darkgoldenrod";
+          }
+          if(shipSize === 2){
+            squares[i].style.backgroundColor = "crimson";
+          }
         }
       } else{
         return;
@@ -131,16 +157,24 @@ function addAIShips(board, amountOfShips) {
 function playerClickSquare(square, board) {
   if (board === 'aiBoard' && (warningIndicator.innerText === "You have started the game. Click on any square on your opponent's board that you would like to attack first." || warningIndicator.innerText === "Opponent has missed. It is your turn now." || warningIndicator.innerText === "You hit a ship. You can attack again.")) {
     if (square.classList.contains('isShip')) {
-      square.style.backgroundColor = 'red';
+      square.classList.remove("isShip");
+      square.classList.add("hit");
+      square.innerText = "X"
       square.removeEventListener('click', playerClickSquare);
-      warningIndicator.innerText = "You hit a ship. You can attack again."
-    } else {
-      square.style.backgroundColor = 'orange';
+      warningIndicator.innerText = "You hit a ship. You can attack again.";
+      turnIndicator.innerText = "Game has started.";
+    } else if(square.classList.contains("hit") || square.classList.contains("miss")){
+      return;
+    }
+    else {
+      square.classList.add("miss");
+      square.innerText = "O"
       square.removeEventListener('click', playerClickSquare);
       warningIndicator.innerText = "You missed. It is your opponent's turn to attack. Please wait..."
       turnIndicator.innerText = "Game has started."
       setTimeout(activateAI, 1000);
     }
+    winnerIndicator();
   }
 }
 
@@ -150,15 +184,16 @@ function activateAI(){
     if(randomSquare.classList.contains("isShip")){
       randomSquare.classList.remove("isShip");
       randomSquare.classList.add("hit");
-      randomSquare.style.backgroundColor = "red";
-      warningIndicator.innerText = "Opponent has hit your ship. It will attack again."
+      randomSquare.innerText = "X";
+      warningIndicator.innerText = "Opponent has hit your ship. It will attack again.";
+      winnerIndicator();
       setTimeout(activateAI, 1000);
     } else if (randomSquare.classList.contains("hit") || randomSquare.classList.contains("miss")){
       activateAI();
     } else if (randomSquare.classList.contains("square")){
       randomSquare.classList.add("miss");
-      randomSquare.style.backgroundColor = "orange";
-      warningIndicator.innerText = "Opponent has missed. It is your turn now."
+      randomSquare.innerText = "O";
+      warningIndicator.innerText = "Opponent has missed. It is your turn now.";
     }
   }
 }
@@ -223,5 +258,27 @@ function rotateButton(){
   }
 }
 
+function winnerIndicator(){
+  if(warningIndicator.innerText === "You hit a ship. You can attack again." || warningIndicator.innerText === "Opponent has missed. It is your turn now."){
+    let classArr = Array.from(aiSquares).flatMap(square => Array.from(square.classList));
+    if(!classArr.includes('isShip')){
+      warningIndicator.innerText = "You have sunk all of your opponent's ships!";
+      turnIndicator.innerText = "You won! Please click on the 'Restart' button if you want to play again."
+    } else{
+      classArr = [];
+      return;
+    }
+  }
 
+  if(warningIndicator.innerText === "You missed. It is your opponent's turn to attack. Please wait..." || warningIndicator.innerText === "Opponent has hit your ship. It will attack again."){
+    let classArr = Array.from(squares).flatMap(square => Array.from(square.classList));
+    if(!classArr.includes("isShip")){
+      warningIndicator.innerText = "All your ships have been sunk.";
+      turnIndicator.innerText = "You lost! Please click on the 'Restart' button if you want to play again."
+      } else{
+        classArr = []
+        return;
+      }
+  }
+}
 

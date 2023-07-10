@@ -56,6 +56,9 @@ h1{
   background-color: white;
   border: 1px solid lightgrey;
   cursor: pointer;
+  justify-content: center;
+  display: flex;
+  align-items: center;
 }
 
 .isShip {
@@ -85,21 +88,26 @@ h1{
 #ship1 {
   width: 60px;
   height: 30px;
+  background-color: crimson;
 }
 
 #ship2 {
   width: 90px;
   height: 30px;
+  background-color: darkgoldenrod;
+
 }
 
 #ship3 {
   width: 120px;
   height: 30px;
+  background-color: indigo;
 }
 
 #ship4 {
   width: 150px;
   height: 30px;
+  background-color: coral;
 }
 
 .rotateBtn{
@@ -152,4 +160,28 @@ button{
 button:hover{
   transform: translateY(-4px);
   cursor: pointer;
+}
+
+.miss{
+  font-size: 30px;
+  color: orange;
+  background-color: blue;
+  font-family: 'Londrina Shadow', cursive;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.hit{
+  font-size: 30px;
+  color: orange;
+  background-color: blue;
+  font-weight: 500;
+  font-family: 'Londrina Shadow', cursive;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
 }
